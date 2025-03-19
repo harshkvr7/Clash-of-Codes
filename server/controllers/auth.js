@@ -11,7 +11,7 @@ export const register = async (req, res) => {
         if (!name || !email || !password || !handle) {
             return res.status(400).json({ message: "Please provide name, email, password, and handle." });
         }
-        
+
         const emailCheck = await client.query("SELECT * FROM users WHERE email = $1", [email]);
         if (emailCheck.rows.length > 0) {
             return res.status(400).json({ message: "Email already exists." });
@@ -50,7 +50,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials." });
         }
 
-        const payload = { id: user.id, email: user.email };
+        const payload = { id: user.id, email: user.email, handle: user.handle };
         const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "720h" });
 
         res.cookie("token", token, { httpOnly: true, secure: process.env.NODE_ENV === "production" });
@@ -59,4 +59,28 @@ export const login = async (req, res) => {
         console.error(error);
         res.status(500).json({ message: "Server error" });
     }
+};
+
+export const getAuthenticatedUser = async (req, res) => {
+    try {
+        const userQuery = await client.query(
+            'SELECT id, name, email, handle FROM users WHERE id = $1',
+            [req.user.id]
+        );
+        const user = userQuery.rows[0];
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found.' });
+        }
+
+        res.status(200).json({ user });
+    } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).json({ message: 'Server error.' });
+    }
+};
+
+export const logout = (req, res) => {
+    res.clearCookie("token", { httpOnly: true, secure: process.env.NODE_ENV === "production" });
+    res.status(200).json({ message: "Logout successful" });
 };
