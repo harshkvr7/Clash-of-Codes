@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 const ProfilePage = () => {
   const { user } = useContext(UserContext);
   const [userInfo, setUserInfo] = useState(null);
-  const [ratingHistory, setRatingHistory] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -26,14 +25,6 @@ const ProfilePage = () => {
           throw new Error("Failed to fetch user info");
         }
         setUserInfo(userInfoResponse.data.result[0]);
-
-        const ratingHistoryResponse = await axios.get(
-          `https://codeforces.com/api/user.rating?handle=${user.handle}`
-        );
-        if (ratingHistoryResponse.data.status !== "OK") {
-          throw new Error("Failed to fetch rating history");
-        }
-        setRatingHistory(ratingHistoryResponse.data.result);
       } catch (err) {
         console.error(err);
         setError("Failed to load user data. Please try again later.");
@@ -88,42 +79,6 @@ const ProfilePage = () => {
             {userInfo.rank || "N/A"}
           </p>
         </div>
-
-        <h2 className="text-2xl font-semibold mt-8 mb-4">Rating History</h2>
-        {ratingHistory.length === 0 ? (
-          <p>No rating history available.</p>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-700 bg-zinc-800 shadow-md rounded">
-              <thead>
-                <tr className="bg-zinc-700">
-                  <th className="px-4 py-3 text-left text-gray-100 font-medium">
-                    Contest
-                  </th>
-                  <th className="px-4 py-3 text-left text-gray-100 font-medium">
-                    Old Rating
-                  </th>
-                  <th className="px-4 py-3 text-left text-gray-100 font-medium">
-                    New Rating
-                  </th>
-                  <th className="px-4 py-3 text-left text-gray-100 font-medium">
-                    Rank
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-700">
-                {ratingHistory.map((change, index) => (
-                  <tr key={index} className="hover:bg-gray-700">
-                    <td className="px-4 py-3">{change.contestName}</td>
-                    <td className="px-4 py-3">{change.oldRating}</td>
-                    <td className="px-4 py-3">{change.newRating}</td>
-                    <td className="px-4 py-3">{change.rank}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
       </div>
     </div>
   );

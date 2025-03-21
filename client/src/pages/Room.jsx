@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -8,7 +8,6 @@ const RoomPage = () => {
   const [joinedRooms, setJoinedRooms] = useState([]);
   const navigate = useNavigate();
 
-  // Fetch joined rooms on component mount
   const fetchJoinedRooms = async () => {
     try {
       const { data } = await axios.get("/api/room/joined");
@@ -19,15 +18,12 @@ const RoomPage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchJoinedRooms();
-  }, []);
-
   const handleCreateRoom = async () => {
     try {
       const { data } = await axios.post("/api/room/create");
       setMessage(`Room created successfully! Room code: ${data.room.room_code}`);
-      fetchJoinedRooms(); 
+      fetchJoinedRooms();
+      navigate(`/room/${data.room.room_code}`);
     } catch (error) {
       console.error(error);
       setMessage("Failed to create room.");
@@ -38,7 +34,8 @@ const RoomPage = () => {
     try {
       const { data } = await axios.post("/api/room/join", { roomCode: joinRoomCode });
       setMessage(`Joined room successfully! Room code: ${data.room.room_code}`);
-      fetchJoinedRooms(); 
+      fetchJoinedRooms();
+      navigate(`/room/${data.room.room_code}`);
     } catch (error) {
       console.error(error);
       setMessage("Failed to join room.");
@@ -49,7 +46,7 @@ const RoomPage = () => {
     try {
       const { data } = await axios.post("/api/room/leave", { roomCode });
       setMessage(`Left room successfully! Room code: ${data.room.room_code}`);
-      fetchJoinedRooms(); 
+      fetchJoinedRooms();
     } catch (error) {
       console.error(error);
       setMessage("Failed to leave room.");
@@ -86,18 +83,34 @@ const RoomPage = () => {
         </div>
       </div>
       <div className="mt-6 w-full max-w-4xl">
-        <h3 className="text-xl text-gray-100 mb-3">Joined Rooms</h3>
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-xl text-gray-100">Joined Rooms</h3>
+          <img
+            src="/refresh.png"
+            alt="Refresh"
+            onClick={fetchJoinedRooms}
+            className="w-6 h-6 cursor-pointer"
+          />
+        </div>
         {joinedRooms.length > 0 ? (
           <ul className="space-y-3">
             {joinedRooms.map((room) => (
               <li key={room.id} className="flex justify-between items-center bg-zinc-800 p-3 rounded">
                 <span className="text-gray-100">Room Code: {room.room_code}</span>
-                <button
-                  onClick={() => handleLeaveRoom(room.room_code)}
-                  className="rounded bg-red-600 hover:bg-red-500 text-white p-1"
-                >
-                  Leave Room
-                </button>
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => navigate(`/room/${room.room_code}`)}
+                    className="rounded bg-green-700 hover:bg-green-600 text-white p-1 hover:cursor-pointer transition-all"
+                  >
+                    Open Room
+                  </button>
+                  <button
+                    onClick={() => handleLeaveRoom(room.room_code)}
+                    className="rounded bg-red-700 hover:bg-red-600 text-white p-1 hover:cursor-pointer transition-all"
+                  >
+                    Leave Room
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

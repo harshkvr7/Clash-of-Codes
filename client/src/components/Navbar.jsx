@@ -26,6 +26,12 @@ const Navbar = () => {
         <Link className="hover:text-blue-400 transition-colors" to="/">Home</Link>
 
         {user && (
+          <Link className="hover:text-blue-400 transition-colors" to="/room">
+            Rooms
+          </Link>
+        )}
+
+        {user && (
           <Link className="hover:text-blue-400 transition-colors" to="/profile">
             {user.handle}
           </Link>

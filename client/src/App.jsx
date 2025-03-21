@@ -6,6 +6,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile"; 
 import Room from "./pages/Room";
+import RoomDetails from "./pages/RoomDetails";
 import { UserProvider } from "./context/UserContext";
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/room" element={<Room />} />
+          <Route path="/room/:roomCode" element={<RoomDetails />} />
         </Routes>
         <Footer />
       </Router>
