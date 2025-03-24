@@ -83,6 +83,18 @@ const RoomDetails = () => {
     }
   };
 
+  const handleStartNewRound = async () => {
+    try {
+      const { data } = await axios.post("/api/room/startNewRound", { roomCode, newRating });
+      setRoomData(data.room);
+      setMessage(data.message);
+      fetchProblemStatement();
+    } catch (error) {
+      console.error(error);
+      setMessage("Failed to start a new round.");
+    }
+  };
+
   const handleCheckSubmission = async () => {
     try {
       const { data } = await axios.post("/api/game/check_sub", { roomData });
@@ -97,7 +109,6 @@ const RoomDetails = () => {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-gray-100 flex">
-      {/* Left Panel: Room Members */}
       <div className="w-64 border-r border-gray-700 p-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl">Room Members</h2>
@@ -130,7 +141,6 @@ const RoomDetails = () => {
         </button>
       </div>
 
-      {/* Main Content: Problem Statement and Submission Links */}
       <div className="flex-1 p-4 overflow-y-auto">
         <div className="mb-4 flex justify-between items-center">
           {roomData && roomData.problem_id ? (
@@ -145,7 +155,7 @@ const RoomDetails = () => {
               href="https://codeforces.com/problemset/submit"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-blue-500 hover:bg-blue-400 text-white px-2 py-1 rounded transition-colors"
+              className=" text-white px-2 py-1 rounded transition-colors hover:text-blue-600"
             >
               Submit Link
             </a>
@@ -160,8 +170,9 @@ const RoomDetails = () => {
         {problemStatement ? (
           <ProblemComponent problemHTML={problemStatement} />
         ) : (
-          <p>Loading problem statement...</p>
+          roomData?.problem_id && <p>Loading problem statement...</p>
         )}
+
       </div>
 
       <div className="w-64 border-l border-gray-700 p-4 flex flex-col">
@@ -170,7 +181,7 @@ const RoomDetails = () => {
             <div>
               <h2 className="text-xl mb-2">Room Details</h2>
               <p>
-                <strong>Room Code: </strong> {roomCode}
+                <strong>Room Code:</strong> {roomCode}
               </p>
               <p>
                 <strong>Rating:</strong> {roomData.rating || "Not set"}
@@ -184,9 +195,12 @@ const RoomDetails = () => {
               <p>
                 <strong>Index:</strong> {roomData.problem_index || "Not set"}
               </p>
+              <p>
+                <strong>Round:</strong> {roomData.round || 1}
+              </p>
             </div>
             {isHost && (
-              <div>
+              <>
                 <input
                   type="number"
                   value={newRating}
@@ -195,17 +209,18 @@ const RoomDetails = () => {
                   placeholder="Enter new rating"
                 />
                 <button
-                  onClick={handleUpdateRating}
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded transition-colors hover:cursor-pointer"
+                  onClick={handleStartNewRound}
+                  className="w-full bg-purple-600 hover:bg-purple-500 text-white py-2 rounded transition-colors hover:cursor-pointer mt-2"
                 >
-                  Update Rating
+                  Start New Round
                 </button>
-              </div>
+              </>
             )}
           </div>
         ) : (
           <p>Loading room details...</p>
         )}
+
       </div>
 
       {message && <div className="absolute bottom-4 text-gray-100">{message}</div>}

@@ -168,50 +168,98 @@ export const getRoomDetails = async (req, res) => {
 
 export const updateRating = async (req, res) => {
     try {
-      const { roomCode, newRating } = req.body;
-  
-      if (!roomCode || !newRating) {
-        return res.status(400).json({ message: "Please provide roomCode and newRating." });
-      }
-  
-      const roomQuery = await client.query(
-        "SELECT * FROM rooms WHERE room_code = $1",
-        [roomCode]
-      );
-      if (roomQuery.rows.length === 0) {
-        return res.status(404).json({ message: "Room not found." });
-      }
-      const room = roomQuery.rows[0];
-  
-      const rating = Number(newRating);
-      if (isNaN(rating)) {
-        return res.status(400).json({ message: "Invalid rating value." });
-      }
-  
-      const cfResponse = await axios.get("https://codeforces.com/api/problemset.problems");
-      if (cfResponse.data.status !== "OK") {
-        return res.status(500).json({ message: "Failed to fetch CodeForces problems." });
-      }
-      const problems = cfResponse.data.result.problems;
-  
-      const filteredProblems = problems.filter((problem) => problem.rating === rating);
-      if (filteredProblems.length === 0) {
-        return res.status(404).json({ message: "No problem found with that rating." });
-      }
-  
-      const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
-  
-      const updatedRoomQuery = await client.query(
-        "UPDATE rooms SET rating = $1, question = $2, problem_index = $3, problem_id = $4 WHERE id = $5 RETURNING *",
-        [rating, randomProblem.name, randomProblem.index, randomProblem.contestId, room.id]
-      );
-  
-      res.status(200).json({
-        message: "Rating updated and question selected.",
-        room: updatedRoomQuery.rows[0],
-      });
+        const { roomCode, newRating } = req.body;
+
+        if (!roomCode || !newRating) {
+            return res.status(400).json({ message: "Please provide roomCode and newRating." });
+        }
+
+        const roomQuery = await client.query(
+            "SELECT * FROM rooms WHERE room_code = $1",
+            [roomCode]
+        );
+        if (roomQuery.rows.length === 0) {
+            return res.status(404).json({ message: "Room not found." });
+        }
+        const room = roomQuery.rows[0];
+
+        const rating = Number(newRating);
+        if (isNaN(rating)) {
+            return res.status(400).json({ message: "Invalid rating value." });
+        }
+
+        const cfResponse = await axios.get("https://codeforces.com/api/problemset.problems");
+        if (cfResponse.data.status !== "OK") {
+            return res.status(500).json({ message: "Failed to fetch CodeForces problems." });
+        }
+        const problems = cfResponse.data.result.problems;
+
+        const filteredProblems = problems.filter((problem) => problem.rating === rating);
+        if (filteredProblems.length === 0) {
+            return res.status(404).json({ message: "No problem found with that rating." });
+        }
+
+        const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
+
+        const updatedRoomQuery = await client.query(
+            "UPDATE rooms SET rating = $1, question = $2, problem_index = $3, problem_id = $4 WHERE id = $5 RETURNING *",
+            [rating, randomProblem.name, randomProblem.index, randomProblem.contestId, room.id]
+        );
+
+        res.status(200).json({
+            message: "Rating updated and question selected.",
+            room: updatedRoomQuery.rows[0],
+        });
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Server error" });
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
     }
-  };
+};
+
+export const startNewRound = async (req, res) => {
+    try {
+        const { roomCode, newRating } = req.body;
+
+        if (!roomCode || !newRating) {
+            return res.status(400).json({ message: "Please provide roomCode and newRating." });
+        }
+
+        const roomQuery = await client.query("SELECT * FROM rooms WHERE room_code = $1", [roomCode]);
+        if (roomQuery.rows.length === 0) {
+            return res.status(404).json({ message: "Room not found." });
+        }
+        const room = roomQuery.rows[0];
+
+        const rating = Number(newRating);
+        if (isNaN(rating)) {
+            return res.status(400).json({ message: "Invalid rating value." });
+        }
+
+        const cfResponse = await axios.get("https://codeforces.com/api/problemset.problems");
+        if (cfResponse.data.status !== "OK") {
+            return res.status(500).json({ message: "Failed to fetch CodeForces problems." });
+        }
+        const problems = cfResponse.data.result.problems;
+        const filteredProblems = problems.filter((problem) => problem.rating === rating);
+        if (filteredProblems.length === 0) {
+            return res.status(404).json({ message: "No problem found with that rating." });
+        }
+
+        const randomProblem = filteredProblems[Math.floor(Math.random() * filteredProblems.length)];
+
+        const newRound = room.round ? Number(room.round) + 1 : 1;
+
+        const updatedRoomQuery = await client.query(
+            "UPDATE rooms SET rating = $1, question = $2, problem_index = $3, problem_id = $4, round = $5 WHERE id = $6 RETURNING *",
+            [rating, randomProblem.name, randomProblem.index, randomProblem.contestId, newRound, room.id]
+        );
+
+        res.status(200).json({
+            message: "New round started, rating updated and new question selected.",
+            room: updatedRoomQuery.rows[0],
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
