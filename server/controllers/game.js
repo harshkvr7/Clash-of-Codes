@@ -34,8 +34,6 @@ export const check_sub = async (req, res) => {
                         "UPDATE room_members SET score = $1, last_scored_round = $2 WHERE id = $3",
                         [newScore, roomData.round, member.id]
                     );
-
-                    
                 }
             }
 
