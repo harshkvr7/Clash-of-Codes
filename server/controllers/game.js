@@ -34,8 +34,15 @@ export const check_sub = async (req, res) => {
                         "UPDATE room_members SET score = $1, last_scored_round = $2 WHERE id = $3",
                         [newScore, roomData.round, member.id]
                     );
+
+                    
                 }
             }
+
+            const roomCode = roomData.room_code;
+            
+            req.io.to(roomCode).emit("roomMembersUpdated");
+
             res.status(200).json({ message: "accepted" });
         } else {
             res.status(200).json({ message: "couldnt find accepted submission" });

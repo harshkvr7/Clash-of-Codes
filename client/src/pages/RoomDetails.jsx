@@ -1,8 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import io from "socket.io-client";
 import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import ProblemComponent from "../components/ProblemComponent";
+
+const socket = io("http://localhost:3000");
 
 const RoomDetails = () => {
   const { roomCode } = useParams();
@@ -14,6 +17,25 @@ const RoomDetails = () => {
   const [problemStatement, setProblemStatement] = useState("");
   const [message, setMessage] = useState("");
   const [newRating, setNewRating] = useState("");
+
+  useEffect(() => {
+    socket.emit("joinRoom", roomCode);
+
+    socket.on("roomMembersUpdated", () => {
+      fetchRoomMembers();
+    });
+
+    socket.on("newRoundStarted", () => {
+      fetchRoomMembers();
+      fetchRoomDetails();
+      fetchProblemStatement();
+    })
+
+    return () => {
+      socket.emit("leaveRoom", roomCode);
+      socket.off("roomMembersUpdated");
+    };
+  }, [roomCode]);
 
   useEffect(() => {
     if (message) {
@@ -71,18 +93,6 @@ const RoomDetails = () => {
     }
   };
 
-  const handleUpdateRating = async () => {
-    try {
-      const { data } = await axios.post("/api/room/updateRating", { roomCode, newRating });
-      setRoomData(data.room);
-      setMessage("Rating updated and a new question selected.");
-      fetchProblemStatement();
-    } catch (error) {
-      console.error(error);
-      setMessage("Failed to update rating.");
-    }
-  };
-
   const handleStartNewRound = async () => {
     try {
       const { data } = await axios.post("/api/room/startNewRound", { roomCode, newRating });
@@ -123,7 +133,13 @@ const RoomDetails = () => {
           <ul className="divide-y divide-gray-700">
             {members.map((member) => (
               <li key={member.id} className="py-2 flex justify-between items-center">
-                <span>
+                <span
+                  className={
+                    roomData && member.last_scored_round === roomData.round
+                      ? "text-green-500"
+                      : ""
+                  }
+                >
                   {member.handle || member.name}{" "}
                   <span className="text-sm text-gray-400">- Score: {member.score}</span>
                 </span>
@@ -150,6 +166,9 @@ const RoomDetails = () => {
           ) : (
             "Waiting for host..."
           )}
+          <p>
+            <strong>Round:</strong> {roomData && roomData.round || 1}
+          </p>
           <div className="flex items-center space-x-2">
             <a
               href="https://codeforces.com/problemset/submit"
@@ -223,7 +242,7 @@ const RoomDetails = () => {
 
       </div>
 
-      {message && <div className="absolute bottom-4 text-gray-100">{message}</div>}
+      {message && <div className="absolute bottom-4 bg-black text-gray-100">{message}</div>}
     </div>
   );
 };
