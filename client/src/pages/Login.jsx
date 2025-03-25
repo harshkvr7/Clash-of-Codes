@@ -15,6 +15,8 @@ const Login = () => {
       const { data } = await axios.post("/api/auth/login", { email, password });
       setUser(data.user);
       navigate("/");
+
+      window.location.reload();
     } catch (error) {
       alert("Invalid credentials. Please try again.");
     }
@@ -40,7 +42,7 @@ const Login = () => {
         />
         <button
           type="submit"
-          className="w-full rounded bg-blue-600 hover:bg-blue-500 text-white p-2 transition-colors"
+          className="w-full rounded bg-blue-600 hover:bg-blue-500 text-white p-2 transition-colors hover:cursor-pointer"
         >
           Login
         </button>

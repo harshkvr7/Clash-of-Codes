@@ -20,7 +20,7 @@ const Navbar = () => {
   return (
     <nav className="bg-zinc-900 text-gray-100 p-4 flex justify-between items-center border-b border-gray-700">
       <div className="flex items-center space-x-4">
-        <h1 className="text-2xl font-extrabold">Clash of Codes</h1>
+      <Link className="hover:text-blue-400 transition-colors" to="/"><h1 className="text-2xl font-extrabold">Clash of Codes</h1></Link>
       </div>
       <div className="flex gap-6">
         <Link className="hover:text-blue-400 transition-colors" to="/">Home</Link>
@@ -32,7 +32,7 @@ const Navbar = () => {
         )}
 
         {user && (
-          <Link className="hover:text-blue-400 transition-colors" to="/profile">
+          <Link className="hover:text-green-400 transition-colors" to="/profile">
             {user.handle}
           </Link>
         )}
@@ -40,7 +40,7 @@ const Navbar = () => {
         {user ? (
           <button
             onClick={handleLogout}
-            className="hover:text-blue-400 transition-colors hover:cursor:pointer"
+            className="hover:text-red-400 transition-colors hover:cursor-pointer"
           >
             Logout
           </button>
