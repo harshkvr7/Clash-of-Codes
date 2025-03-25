@@ -5,7 +5,7 @@ import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import ProblemComponent from "../components/ProblemComponent";
 
-const socket = io("http://localhost:3000");
+const socket = io("https://clash-of-codes-production.up.railway.app/");
 
 const RoomDetails = () => {
   const { roomCode } = useParams();

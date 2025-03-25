@@ -6,6 +6,12 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [tailwindcss(), react()],
   server: {
-    
+    proxy: {
+      '/api': {
+        target: 'https://clash-of-codes-production.up.railway.app/',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 })
