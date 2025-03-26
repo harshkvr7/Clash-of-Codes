@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import StarBorder from "../components/StarBorder";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -20,44 +21,52 @@ const Register = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-zinc-900">
-      <form onSubmit={handleRegister} className="bg-zinc-800 p-6 rounded-lg shadow-xl w-80">
-        <h2 className="text-2xl mb-4 text-gray-100 font-semibold">Register</h2>
-        <input
-          type="text"
-          className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input
-          type="email"
-          className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <input
-          type="text"
-          className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Handle"
-          value={handle}
-          onChange={(e) => setHandle(e.target.value)}
-        />
-        <button
-          type="submit"
-          className="w-full rounded bg-blue-600 hover:bg-blue-500 text-white p-2 transition-colors hover:cursor-pointer"
-        >
-          Register
-        </button>
-      </form>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black">
+      <StarBorder
+        as="div"
+        className="custom-class"
+        color="cyan"
+        speed="5s"
+      >
+        <form onSubmit={handleRegister} className="py-6 rounded-lg shadow-xl w-70">
+          <h2 className="text-2xl mb-4 text-gray-100 font-semibold">Register</h2>
+          <input
+            type="text"
+            className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            type="email"
+            className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            type="text"
+            className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Cf Handle"
+            value={handle}
+            onChange={(e) => setHandle(e.target.value)}
+          />
+          <button
+            type="submit"
+            className="w-full rounded bg-blue-600 hover:bg-blue-500 text-white p-2 transition-colors hover:cursor-pointer"
+          >
+            Register
+          </button>
+        </form>
+      </StarBorder>
+
     </div>
   );
 };

@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-zinc-900 text-gray-100 p-4 flex justify-between items-center border-b border-gray-700">
+    <nav className="bg-black text-gray-100 p-4 flex justify-between items-center border-b border-gray-600">
       <div className="flex items-center space-x-4">
       <Link className="hover:text-blue-400 transition-colors" to="/"><h1 className="text-2xl font-extrabold">Clash of Codes</h1></Link>
       </div>

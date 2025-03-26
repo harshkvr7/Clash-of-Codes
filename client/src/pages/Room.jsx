@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import StarBorder from "../components/StarBorder";
 
 const RoomPage = () => {
   const [joinRoomCode, setJoinRoomCode] = useState("");
@@ -54,34 +55,44 @@ const RoomPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-900 flex flex-col items-center justify-center">
-      <div className="bg-zinc-800 p-6 rounded-lg shadow-xl w-full max-w-4xl flex">
-        <div className="w-1/2 border-r border-gray-700 pr-4 flex flex-col items-center">
-          <h2 className="text-2xl mb-4 text-gray-100 font-semibold">Create Room</h2>
-          <button
-            onClick={handleCreateRoom}
-            className="w-full rounded bg-blue-600 hover:cursor-pointer hover:bg-blue-500 text-white p-2 transition-colors"
-          >
-            Create Room
-          </button>
+    <div className="min-h-screen bg-black flex flex-col items-center justify-center">
+      <StarBorder
+        as="div"
+        className="custom-class p-6 rounded-lg shadow-xl w-full max-w-4xl flex"
+        color="cyan"
+        speed="5s"
+      >
+        <div className="flex p-6">
+          <div className="w-1/2 border-r border-zinc-800 pr-4 flex flex-col items-center">
+            <h2 className="text-2xl mb-4 text-gray-100 font-semibold">Create Room</h2>
+            <button
+              onClick={handleCreateRoom}
+              className="w-full rounded bg-blue-600 hover:cursor-pointer hover:bg-blue-500 text-white p-2 transition-colors"
+            >
+              Create Room
+            </button>
+          </div>
+          <div className="w-1/2 pl-4 flex flex-col items-center justify-center">
+            <h2 className="text-2xl mb-4 text-gray-100 font-semibold">Join Room</h2>
+            <input
+              type="text"
+              placeholder="Enter Room Code"
+              value={joinRoomCode}
+              onChange={(e) => setJoinRoomCode(e.target.value)}
+              className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={handleJoinRoom}
+              className="w-full rounded bg-green-600 hover:bg-green-500 text-white p-2 transition-colors hover:cursor-pointer"
+            >
+              Join Room
+            </button>
+          </div>
         </div>
-        <div className="w-1/2 pl-4 flex flex-col items-center justify-center">
-          <h2 className="text-2xl mb-4 text-gray-100 font-semibold">Join Room</h2>
-          <input
-            type="text"
-            placeholder="Enter Room Code"
-            value={joinRoomCode}
-            onChange={(e) => setJoinRoomCode(e.target.value)}
-            className="w-full rounded border border-gray-700 bg-zinc-700 text-gray-100 p-2 mb-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={handleJoinRoom}
-            className="w-full rounded bg-green-600 hover:bg-green-500 text-white p-2 transition-colors hover:cursor-pointer"
-          >
-            Join Room
-          </button>
-        </div>
-      </div>
+      </StarBorder>
+
+
+
       <div className="mt-6 w-full max-w-4xl">
         <div className="flex justify-between items-center mb-3">
           <h3 className="text-xl text-gray-100">Joined Rooms</h3>

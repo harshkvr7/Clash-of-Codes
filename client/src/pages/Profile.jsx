@@ -38,7 +38,7 @@ const ProfilePage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-zinc-900 text-gray-100">
+      <div className="flex justify-center items-center h-screen bg-black text-gray-100">
         Loading...
       </div>
     );
@@ -46,18 +46,18 @@ const ProfilePage = () => {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen bg-zinc-900 text-red-500">
+      <div className="flex justify-center items-center h-screen bg-black text-red-500">
         {error}
       </div>
     );
   }
 
   return (
-    <div className="bg-zinc-900 min-h-screen text-gray-100">
+    <div className="bg-black min-h-screen text-gray-100">
       <div className="max-w-3xl mx-auto p-6">
         <h1 className="text-3xl font-bold mb-6">{userInfo.handle}&apos;s Profile</h1>
         
-        <div className="bg-zinc-800 rounded-lg p-6 shadow-md">
+        <div className="bg-zinc-900 rounded-lg p-6 shadow-md border border-zinc-700 ">
           <p className="mb-2">
             <strong className="text-gray-100">Name:</strong>{" "}
             {userInfo.firstName || "N/A"} {userInfo.lastName || ""}

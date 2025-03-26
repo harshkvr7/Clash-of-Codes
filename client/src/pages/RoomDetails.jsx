@@ -5,7 +5,7 @@ import axios from "axios";
 import { UserContext } from "../context/UserContext";
 import ProblemComponent from "../components/ProblemComponent";
 
-const socket = io("https://clash-of-codes-production.up.railway.app/");
+const socket = io("http://localhost:3000/");
 
 const RoomDetails = () => {
   const { roomCode } = useParams();
@@ -118,8 +118,8 @@ const RoomDetails = () => {
   const isHost = roomData && user && roomData.host_id === user.id;
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-gray-100 flex">
-      <div className="w-64 border-r border-gray-700 p-4">
+    <div className="min-h-screen bg-black text-gray-100 flex">
+      <div className="w-64 border-r border-zinc-800 p-4">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl">Room Members</h2>
           <img
@@ -130,7 +130,7 @@ const RoomDetails = () => {
           />
         </div>
         {members.length > 0 ? (
-          <ul className="divide-y divide-gray-700">
+          <ul className="divide-y divide-zinc-800">
             {members.map((member) => (
               <li key={member.id} className="py-2 flex justify-between items-center">
                 <span
@@ -194,7 +194,7 @@ const RoomDetails = () => {
 
       </div>
 
-      <div className="w-64 border-l border-gray-700 p-4 flex flex-col">
+      <div className="w-64 border-l border-zinc-800 p-4 flex flex-col">
         {roomData ? (
           <div className="flex flex-col space-y-4 h-full">
             <div>
