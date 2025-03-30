@@ -1,1 +1,1 @@
-<video src='./out.mp4'> </video>
+![](out.mov)
