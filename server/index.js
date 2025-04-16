@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 import { Server } from "socket.io";
 import http from "http"
 import cors from "cors"
+import path from "path";
 
 import authRoutes from "./routes/auth.js";
 import roomRoutes from "./routes/room.js"
@@ -15,6 +16,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
     cors: { origin: "*" }
 });
+
+const __dirname = path.resolve();
 
 app.use(cors({ origin: 'http://localhost:5173' }));
 
@@ -52,6 +55,11 @@ io.on("connection", (socket) => {
         console.log("Client disconnected:", socket.id);
     });
 });
+
+app.use(express.static(path.join(__dirname, "../client/dist")));
+app.get("*", (req,res)=>{
+    res.sendFile(path.resolve(__dirname, "../client", "dist", "index.html"));
+})
 
 server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
